@@ -12,16 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy with Docker Compose
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /root/fastapi-lesson
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/fastapi-lesson
             git fetch origin
             git pull --rebase origin master
             docker-compose down
             docker-compose up -d --build
             docker restart test-api-nginx
-            docker-compose exec -T test-api python manage.py makemigrations --noinput || true
-            docker-compose exec -T test-api python manage.py migrate --noinput
-            docker-compose exec -T test-api python manage.py collectstatic --noinput
-          EOF
