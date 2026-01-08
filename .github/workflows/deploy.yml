@@ -21,6 +21,10 @@ jobs:
           echo "POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'" >> .env
           echo "POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'" >> .env
 
+      - name: Copy .env to server
+        run: |
+         scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/fastapi-lesson/.env
+
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@master
         with:
