@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | FastAPI App</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --dark-bg: #020617;
+            --card-bg: #1e293b;
+            --input-bg: #0f172a;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at top left, rgba(168, 85, 247, 0.1), transparent),
+                              radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.1), transparent);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: var(--primary); }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Sol tərəfdəki əsas ikonlar */
+        .input-wrapper > i:not(.toggle-password) {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: 0.3s;
+            z-index: 5;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        input:focus + i {
+            color: var(--primary);
+        }
+
+        /* Göz ikonu stili */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: 0.3s;
+            z-index: 10;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        /* Şifrə inputunun sağ tərəfində ikon üçün yer */
+        input[type="password"], input[type="text"]#password {
+            padding-right: 45px;
+        }
+
+        button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -6px rgba(99, 102, 241, 0.5);
+        }
+
+        .login-link {
+            margin-top: 1.8rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .login-link a:hover { text-decoration: underline; }
+
+        @media (max-width: 480px) {
+            .register-container { padding: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <a href="/" class="back-link"><i class="fas fa-chevron-left"></i> Ana Səhifə</a>
+        
+        <h1>Yeni Hesab</h1>
+        <p class="subtitle">Platformaya qoşulmaq üçün məlumatlarınızı daxil edin.</p>
+
+        <form method="post" class="form-group">
+            <div class="input-wrapper">
+                <i class="fas fa-address-card"></i>
+                <input type="text" name="name" placeholder="Ad" required>
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fas fa-id-badge"></i>
+                <input type="text" name="surname" placeholder="Soyad" required>
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fas fa-user-plus"></i>
+                <input type="text" name="username" placeholder="İstifadəçi adı" required>
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fas fa-key"></i>
+                <input type="password" name="password" id="password" placeholder="Güclü şifrə" required>
+                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+            </div>
+
+            <button type="submit">Qeydiyyatı Tamamla</button>
+        </form>
+        
+        <div class="login-link">
+            Artıq hesabınız var? <a href="/auth/login">Daxil olun</a>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        // Şifrə göstər/gizlə funksionallığı
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordField = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function () {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                // İkonu dəyişdir
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // 1. Backend xətaları
+        {% if error %}
+            Toastify({
+                text: "{{ error }}",
+                duration: 5000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                style: { background: "linear-gradient(to right, #f43f5e, #fb7185)" }
+            }).showToast();
+        {% endif %}
+
+        // 2. URL xəbərdarlıqları
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+
+        if (msg === 'auth_required') {
+            Toastify({
+                text: "Davam etmək üçün əvvəlcə qeydiyyatdan keçməlisiniz.",
+                duration: 4000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                style: { background: "linear-gradient(to right, #f59e0b, #fbbf24)" }
+            }).showToast();
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+
+</body>
+</html>

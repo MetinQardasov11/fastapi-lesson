@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shared_network # Nginx ilə eyni şəbəkə
+
+  test-api:
+    build: .
+    container_name: fastapi_app
+    restart: always
+    env_file: .env
+    depends_on:
+      - db
+    expose:
+      - "8000"
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    external: true # Artıq mövcud olan şəbəkəni istifadə et

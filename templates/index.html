@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Enterprise - Next Gen Platform</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --dark: #020617;
+            --card-bg: #1e293b;
+            --accent: #22d3ee;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- Navbar & Dropdown --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 8%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: #fff; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a { 
+            text-decoration: none; 
+            color: #cbd5e1; 
+            margin-left: 2rem; 
+            font-weight: 500; 
+            transition: 0.3s; 
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Profil Dropdown Stili */
+        .profile-dropdown {
+            position: relative;
+            margin-left: 2.5rem;
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            border-color: var(--accent);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 55px;
+            width: 220px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px !important;
+            margin-left: 0 !important;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .dropdown-menu a i {
+            font-size: 1rem;
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent) !important;
+            padding-left: 25px !important;
+        }
+
+        .profile-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 180px 8% 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        .hero-content { max-width: 600px; }
+        .hero-content h1 { font-size: 4.2rem; line-height: 1.1; margin-bottom: 1.5rem; font-weight: 800; }
+        .hero-content span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-content p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2.5rem; }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .hero-image img {
+            width: 500px;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- Stats --- */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 5rem 8%;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-item { text-align: center; }
+        .stat-item h2 { font-size: 2.8rem; color: var(--accent); margin-bottom: 5px; }
+        .stat-item p { color: var(--text-muted); font-weight: 500; }
+
+        /* --- Features --- */
+        .features { padding: 100px 8%; text-align: center; }
+        .features h2 { font-size: 2.5rem; margin-bottom: 50px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; }
+        .f-card {
+            background: var(--card-bg);
+            padding: 3.5rem 2rem;
+            border-radius: 28px;
+            transition: 0.4s;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .f-card:hover { 
+            transform: translateY(-15px); 
+            background: #242f44; 
+            border-color: var(--primary);
+        }
+        .f-card i { font-size: 3.2rem; color: var(--primary); margin-bottom: 1.5rem; }
+
+        /* --- CTA --- */
+        .cta {
+            margin: 80px 8%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 80px 40px;
+            border-radius: 40px;
+            text-align: center;
+        }
+        .cta h2 { font-size: 3rem; margin-bottom: 1.5rem; }
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 1.2rem 3rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 800;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .btn-white:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+        footer { padding: 50px 8%; text-align: center; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); }
+
+        @media (max-width: 968px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 140px; }
+            .hero-image img { width: 100%; max-width: 400px; margin-top: 50px; }
+            .hero-content h1 { font-size: 3rem; }
+            .nav-links a:not(.profile-dropdown a) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="logo"><i class="fas fa-layer-group"></i> FAST<span>API</span></a>
+        <div class="nav-links">
+            <a href="#hero">Ana Səhifə</a>
+            <a href="#stats">Haqqımızda</a>
+            <a href="#features">Xüsusiyyətlər</a>
+            
+            <div class="profile-dropdown">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">İstifadəçi Paneli</div>
+                    <a href="/auth/login"><i class="fas fa-sign-in-alt"></i> Giriş et</a>
+                    <a href="/auth/register"><i class="fas fa-user-plus"></i> Qeydiyyat</a>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.05); margin: 5px 0;"></div>
+                    <a href="/auth/profile"><i class="fas fa-id-card"></i> Profilim</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Sürətli və <span>Ağıllı</span> İdarəetmə Paneli</h1>
+            <p>Sizə lazım olan hər şeyi bir yerdə toplayan, müasir texnologiyalarla təchiz olunmuş ən sürətli FastAPI platforması.</p>
+            <a href="/auth/register" class="btn-main">Pulsuz Başla</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Dashboard Preview">
+        </div>
+    </section>
+
+    <section class="stats" id="stats">
+        <div class="stat-item">
+            <h2>50K+</h2>
+            <p>Aktiv İstifadəçi</p>
+        </div>
+        <div class="stat-item">
+            <h2>99.9%</h2>
+            <p>Uptime Sürəti</p>
+        </div>
+        <div class="stat-item">
+            <h2>24/7</h2>
+            <p>Dəstək Xidməti</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Eksklüziv İmkanlar</h2>
+        <div class="features-grid">
+            <div class="f-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Ultra Sürət</h3>
+                <p>FastAPI sayəsində tətbiqiniz anında cavab verir.</p>
+            </div>
+            <div class="f-card">
+                <i class="fas fa-user-shield"></i>
+                <h3>Maksimum Mühafizə</h3>
+                <p>JWT və Cookie əsaslı təhlükəsiz giriş sistemi.</p>
+            </div>
+            <div class="f-card">
+                <i class="fas fa-code"></i>
+                <h3>Təmiz Kod</h3>
+                <p>Gələcək layihələriniz üçün mükəmməl başlanğıc nöqtəsi.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Siz də bizə qoşulun!</h2>
+        <p>Minlərlə istifadəçi artıq bu rahatlığı yaşayır.</p>
+        <div style="margin-top: 30px;">
+            <a href="/auth/register" class="btn-white">Hesabını Yarat</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 FastAPI Enterprise System. Created for Performance.</p>
+    </footer>
+
+</body>
+</html>
