@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - shared_network # Nginx ilə eyni şəbəkə
+      - shared_network
 
   test-api:
     build: .
