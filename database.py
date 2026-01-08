@@ -5,13 +5,14 @@ from os import getenv
 
 load_dotenv()
 
-DB_HOST = getenv('DB_HOST')
-DB_PORT = getenv('DB_PORT')
-DB_USERNAME = getenv('DB_USERNAME')
-DB_PASSWORD = getenv('DB_PASSWORD')
-DB_NAME = getenv('DB_NAME')
+POSTGRES_HOST = getenv('DB_HOST')
+POSTGRES_PORT = getenv('DB_PORT')
+POSTGRES_USER = getenv('DB_USERNAME')
+POSTGRES_PASSWORD = getenv('DB_PASSWORD')
+POSTGRES_DB = getenv('DB_NAME')
+DEBUG = getenv('DEBUG')
 
-DATABASE_URL = f"postgresql+asyncpg://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 
